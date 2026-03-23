@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marty's Nacho Mama's - Final Layout</title>
+    <style>
+        :root { --primary: #fdb933; --dark: #1a1a1a; --grey: #666; --bg: #fdfdfd; --red: #e74c3c; }
+        body { font-family: 'Arial Narrow', sans-serif; margin: 0; background: var(--bg); color: var(--dark); line-height: 1.4; }
+        
+        header { background: white; padding: 20px; border-bottom: 6px solid var(--primary); display: flex; flex-direction: column; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo-block { display: flex; flex-direction: column; align-items: center; margin-bottom: 10px; }
+        .pizza-script { font-family: 'Brush Script MT', cursive; font-size: 50px; color: #1a1a1a; line-height: 0.8; }
+        .nacho-text { color: white; background: #1a1a1a; padding: 2px 14px; font-size: 14px; text-transform: uppercase; font-weight: 900; border-radius: 12px; margin-top: -5px; z-index: 3; letter-spacing: 1px; }
+
+        .tabs { display: flex; gap: 8px; margin-top: 20px; }
+        .tab-btn { padding: 10px 25px; border: 2px solid var(--dark); background: white; cursor: pointer; font-weight: bold; text-transform: uppercase; border-radius: 5px; }
+        .tab-btn.active { background: var(--primary); border-color: var(--primary); }
+
+        .page { display: none; max-width: 1300px; margin: 0 auto; padding: 20px; }
+        .page.active { display: grid; }
+
+        .menu-container { grid-template-columns: 1fr 380px; gap: 30px; }
+        @media (max-width: 1050px) { .menu-container { grid-template-columns: 1fr; } .cart-sticky { position: static !important; } }
+
+        .category-title { background: var(--dark); color: var(--primary); padding: 10px 15px; font-weight: 900; text-transform: uppercase; margin: 25px 0 12px 0; border-radius: 4px; font-size: 1.2em; border-left: 5px solid var(--primary); }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+
+        .item { background: white; padding: 15px; border-radius: 8px; border: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; transition: 0.2s; }
+        .item:hover { border-color: var(--primary); background: #fffdf7; transform: translateY(-2px); }
+        .item-info { flex: 1; padding-right: 10px; }
+        .item-name { font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 3px; }
+        .item-desc { font-size: 0.85em; color: var(--grey); font-style: italic; line-height: 1.2; }
+        .item-price { font-weight: 900; font-size: 1.3em; }
+
+        .cart-sticky { position: sticky; top: 20px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid #ddd; height: fit-content; }
+        .cart-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .remove-btn { color: var(--red); border: none; background: none; font-weight: bold; cursor: pointer; font-size: 1.2em; margin-right: 8px; }
+        
+        .payment-toggle { display: flex; background: #f0f0f0; border-radius: 8px; margin: 20px 0; padding: 5px; }
+        .pay-opt { flex: 1; text-align: center; padding: 12px; cursor: pointer; font-weight: bold; border-radius: 6px; }
+        .pay-opt.active { background: var(--dark); color: white; }
+        
+        .total-box { margin-top: 15px; border-top: 3px solid var(--dark); padding-top: 15px; }
+        .grand-total { display: flex; justify-content: space-between; font-weight: 900; font-size: 2em; color: #b8860b; margin-top: 10px; }
+
+        .cal-card { background: white; padding: 30px; border-radius: 15px; border: 1px solid #ddd; max-width: 800px; margin: 0 auto; width: 100%; }
+        .event-item { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #eee; align-items: center; }
+        .event-date { font-weight: 900; color: var(--primary); background: var(--dark); padding: 8px 15px; border-radius: 6px; min-width: 90px; text-align: center; margin-right: 15px; }
+        
+        .admin-box { margin-bottom: 30px; padding: 20px; background: #fffbe6; border: 2px dashed var(--primary); border-radius: 10px; display: none; }
+        .admin-login-link { margin-top: 40px; color: #ccc; font-size: 0.7em; cursor: pointer; text-decoration: underline; border: none; background: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-block">
+        <span class="pizza-script">Marty's</span>
+        <span class="nacho-text">Nacho Mama's</span>
+    </div>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showPage('menu-page', this)">Menu Calculator</button>
+        <button class="tab-btn" onclick="showPage('calendar-page', this)">Schedule</button>
+    </div>
+</header>
+
+<div id="menu-page" class="page active menu-container">
+    <div>
+        <div class="category-title">Nachos</div>
+        <div class="menu-grid">
+            <div class="item" onclick="add('Loaded Nachos', 10)">
+                <div class="item-info"><span class="item-name">Loaded Nachos</span><span class="item-desc">Chicken/Beef, cheese, tomato, sour cream</span></div>
+                <div class="item-price">$10</div>
+            </div>
+            <div class="item" onclick="add('Nachos & Cheese', 4)">
+                <div class="item-info"><span class="item-name">Nachos & Cheese</span><span class="item-desc">Tortilla chips and warm cheese</span></div>
+                <div class="item-price">$4</div>
+            </div>
+            <div class="item" onclick="add('Sweet & Spicy Nachos', 10)">
+                <div class="item-info"><span class="item-name">Sweet & Spicy Nachos</span><span class="item-desc">Chicken/Beef, cheese, jalapeno, sweet mama sauce</span></div>
+                <div class="item-price">$10</div>
+            </div>
+        </div>
+
+        <div class="category-title">Quesadillas</div>
+        <div class="menu-grid">
+            <div class="item" onclick="add('Raya\'s Quesadilla', 12)">
+                <div class="item-info"><span class="item-name">Raya's Quesadilla</span><span class="item-desc">Chicken, bacon, black beans, slap sauce</span></div>
+                <div class="item-price">$12</div>
+            </div>
+            <div class="item" onclick="add('Shawdy\'s Quesadilla', 12)">
+                <div class="item-info"><span class="item-name">Shawdy's Quesadilla</span><span class="item-desc">Chicken & steak, veg, slap sauce</span></div>
+                <div class="item-price">$12</div>
+            </div>
+            <div class="item" onclick="add('Veggie Quesadilla', 10)">
+                <div class="item-info"><span class="item-name">Veggie Quesadilla</span><span class="item-desc">Grilled mushrooms, cheese, slap sauce</span></div>
+                <div class="item-price">$10</div>
+            </div>
+        </div>
+
+        <div class="category-title">Tacos, Wraps & Salads</div>
+        <div class="menu-grid">
+            <div class="item" onclick="add('Jay\'s Wrap', 10)">
+                <div class="item-info"><span class="item-name">Jay's Wrap</span><span class="item-desc">Chicken, lettuce, tomato, cheese, ranch</span></div>
+                <div class="item-price">$10</div>
+            </div>
+            <div class="item" onclick="add('Marty\'s Tacos (3)', 10)">
+                <div class="item-info"><span class="item-name">Marty's Tacos (3)</span><span class="item-desc">Chicken/Beef, lettuce, cheese, pico, sour cream</span></div>
+                <div class="item-price">$10</div>
+            </div>
+            <div class="item" onclick="add('Steak/Chicken Salad', 10)">
+                <div class="item-info"><span class="item-name">Steak or Chicken Salad</span><span class="item-desc">Grilled meat, tomato, onion, cheese, fries</span></div>
+                <div class="item-price">$10</div>
+            </div>
+            <div class="item" onclick="add('Street Tacos (3)', 10)">
+                <div class="item-info"><span class="item-name">Street Tacos (3)</span><span class="item-desc">Chicken/Steak/Beef, onion, cilantro</span></div>
+                <div class="item-price">$10</div>
+            </div>
+            <div class="item" onclick="add('Sweet & Sour Wrap', 10)">
+                <div class="item-info"><span class="item-name">Sweet & Sour Wrap</span><span class="item-desc">Chicken, bacon, lettuce, tomato, cheese, sweet & sour</span></div>
+                <div class="item-price">$10</div>
+            </div>
+            <div class="item" onclick="add('Taco Salad', 10)">
+                <div class="item-info"><span class="item-name">Taco Salad</span><span class="item-desc">Beef, tomato, onion, cheese, Doritos, sweet mama sauce</span></div>
+                <div class="item-price">$10</div>
+            </div>
+            <div class="item" onclick="add('Walking Taco', 9)">
+                <div class="item-info"><span class="item-name">Walking Taco</span><span class="item-desc">Doritos base, beef, lettuce, cheese, tomato, sour cream</span></div>
+                <div class="item-price">$9</div>
+            </div>
+        </div>
+
+        <div class="category-title">Sides, Snacks & Drinks</div>
+        <div class="menu-grid">
+            <div class="item" onclick="add('Regular Fries (S)', 4)">
+                <div class="item-info"><span class="item-name">Regular Fries (S)</span><span class="item-desc">Small fresh-cut fries</span></div>
+                <div class="item-price">$4</div>
+            </div>
+            <div class="item" onclick="add('Regular Fries (L)', 6)">
+                <div class="item-info"><span class="item-name">Regular Fries (L)</span><span class="item-desc">Large fresh-cut fries</span></div>
+                <div class="item-price">$6</div>
+            </div>
+            <div class="item" onclick="add('Special Fries (S)', 7)">
+                <div class="item-info"><span class="item-name">Special Fries (S)</span><span class="item-desc">Small fries with Marty's special seasoning</span></div>
+                <div class="item-price">$7</div>
+            </div>
+            <div class="item" onclick="add('Special Fries (L)', 10)">
+                <div class="item-info"><span class="item-name">Special Fries (L)</span><span class="item-desc">Large fries with Marty's special seasoning</span></div>
+                <div class="item-price">$10</div>
+            </div>
+            <div class="item" onclick="add('Loaded Fries (S)', 7)">
+                <div class="item-info"><span class="item-name">Loaded Fries (S)</span><span class="item-desc">Beef, cheese, onion, ranch, banana peppers</span></div>
+                <div class="item-price">$7</div>
+            </div>
+            <div class="item" onclick="add('Loaded Fries (L)', 10)">
+                <div class="item-info"><span class="item-name">Loaded Fries (L)</span><span class="item-desc">Beef, cheese, onion, ranch, banana peppers</span></div>
+                <div class="item-price">$10</div>
+            </div>
+            <div class="item" onclick="add('Elote Cup', 8)">
+                <div class="item-info"><span class="item-name">Elote Cup</span><span class="item-desc">Corn, mayo, cheese, Tajin, cilantro, lime</span></div>
+                <div class="item-price">$8</div>
+            </div>
+            <div class="item" onclick="add('Hot Dog (Classic)', 3)">
+                <div class="item-info"><span class="item-name">Hot Dog (Classic)</span><span class="item-desc">All-beef frank</span></div>
+                <div class="item-price">$3</div>
+            </div>
+            <div class="item" onclick="add('Hot Dog (Loaded)', 4)">
+                <div class="item-info"><span class="item-name">Hot Dog (Loaded)</span><span class="item-desc">Beef, cheese, and onion topping</span></div>
+                <div class="item-price">$4</div>
+            </div>
+            <div class="item" onclick="add('Lemonade', 7)">
+                <div class="item-info"><span class="item-name">Lemonade</span><span class="item-desc">Freshly squeezed cold lemonade</span></div>
+                <div class="item-price">$7</div>
+            </div>
+            <div class="item" onclick="add('Bottled Drink', 2)">
+                <div class="item-info"><span class="item-name">Bottled Drink</span><span class="item-desc">Assorted sodas and water</span></div>
+                <div class="item-price">$2</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-sticky">
+        <h2 style="margin:0 0 10px 0; border-bottom:3px solid var(--primary); display:inline-block">Tray Total</h2>
+        <div id="cart-list"></div>
+        <div id="cart-summary" style="display:none;">
+            <div class="payment-toggle">
+                <div id="opt-card" class="pay-opt active" onclick="setPayment('card')">CARD</div>
+                <div id="opt-cash" class="pay-opt" onclick="setPayment('cash')">CASH</div>
+            </div>
+            <div class="total-box">
+                <div id="tax-line" class="line-item" style="display:flex; justify-content:space-between"><span>Tax + Fee:</span><span id="tax-fee-display">$0.00</span></div>
+                <div class="grand-total"><span>TOTAL:</span><span id="grand-total">$0.00</span></div>
+            </div>
+            <button onclick="clearCart()" style="width:100%; margin-top:20px; background:none; border:1px solid #ddd; cursor:pointer; padding:10px; font-weight:bold;">RESET TRAY</button>
+        </div>
+    </div>
+</div>
+
+<div id="calendar-page" class="page">
+    <div class="cal-card">
+        <h1 style="text-transform:uppercase; border-bottom:5px solid var(--primary); display:inline-block">Schedule</h1>
+        <div id="admin-editor" class="admin-box">
+            <input type="text" id="new-date" placeholder="Date (OCT 15)">
+            <input type="text" id="new-loc" placeholder="Location">
+            <button onclick="addEvent()" style="background:var(--dark); color:var(--primary); border:none; padding:10px; cursor:pointer; width:100%; font-weight:bold; margin-top:10px">ADD DATE</button>
+        </div>
+        <div id="event-list"></div>
+        <center><button class="admin-login-link" onclick="handleAdmin()">Staff Login</button></center>
+    </div>
+</div>
+
+<script>
+    function showPage(pId, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(pId).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    let adminMode = false;
+    function handleAdmin() {
+        if(adminMode) { adminMode = false; document.getElementById('admin-editor').style.display = 'none'; renderCalendar(); return; }
+        if(prompt("Password:") === "Raya1020!") {
+            adminMode = true;
+            document.getElementById('admin-editor').style.display = 'block';
+            renderCalendar();
+        }
+    }
+
+    let events = JSON.parse(localStorage.getItem('marty_events')) || [{ date: 'MAR 28', loc: 'Spring Kickoff' }];
+    function renderCalendar() {
+        const list = document.getElementById('event-list');
+        list.innerHTML = '';
+        events.forEach((ev, i) => {
+            const item = document.createElement('div');
+            item.className = 'event-item';
+            item.innerHTML = `<div><span class="event-date">${ev.date}</span><b>${ev.loc}</b></div>
+                ${adminMode ? `<button onclick="deleteEvent(${i})" style="color:red; border:none; background:none; cursor:pointer">DELETE</button>` : ''}`;
+            list.appendChild(item);
+        });
+    }
+    function addEvent() {
+        const d = document.getElementById('new-date').value;
+        const l = document.getElementById('new-loc').value;
+        if(d && l) { events.unshift({date: d.toUpperCase(), loc: l}); localStorage.setItem('marty_events', JSON.stringify(events)); renderCalendar(); }
+    }
+    function deleteEvent(i) { events.splice(i, 1); localStorage.setItem('marty_events', JSON.stringify(events)); renderCalendar(); }
+
+    let cart = [];
+    let method = 'card';
+    function add(n, p) { cart.push({ id: Date.now()+Math.random(), n, p }); render(); }
+    function remove(id) { cart = cart.filter(i => i.id !== id); render(); }
+    function clearCart() { cart = []; render(); }
+    function setPayment(m) { method = m; render(); }
+
+    function render() {
+        const list = document.getElementById('cart-list');
+        const summary = document.getElementById('cart-summary');
+        if(cart.length === 0) { list.innerHTML = '<p style="text-align:center;color:#999">Tray is empty</p>'; summary.style.display='none'; return; }
+        summary.style.display = 'block';
+        list.innerHTML = '';
+        let sub = 0;
+        cart.forEach(i => {
+            sub += i.p;
+            const r = document.createElement('div');
+            r.className = 'cart-row';
+            r.innerHTML = `<span><button onclick="remove(${i.id})" class="remove-btn">×</button>${i.n}</span><b>$${i.p}</b>`;
+            list.appendChild(r);
+        });
+        document.getElementById('opt-card').classList.toggle('active', method === 'card');
+        document.getElementById('opt-cash').classList.toggle('active', method === 'cash');
+        const extra = method === 'card' ? (sub * 0.06) + 1 : 0;
+        document.getElementById('tax-fee-display').innerText = `$${extra.toFixed(2)}`;
+        document.getElementById('tax-line').style.display = method === 'card' ? 'flex' : 'none';
+        document.getElementById('grand-total').innerText = `$${(sub + extra).toFixed(2)}`;
+    }
+    renderCalendar();
+</script>
+</body>
+</html>
